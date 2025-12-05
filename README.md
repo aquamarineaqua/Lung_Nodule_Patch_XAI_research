@@ -55,23 +55,6 @@ LIDC-IDRI_patch_research/
 ### Required Libraries
 
 ```bash
-pip install torch torchvision
-pip install transformers
-pip install huggingface_hub
-pip install pandas numpy
-pip install matplotlib
-pip install scikit-learn
-pip install statsmodels
-pip install h5py
-pip install tqdm
-pip install pillow
-pip install seaborn
-pip install jupyter
-```
-
-Or install all at once:
-
-```bash
 pip install torch torchvision transformers huggingface_hub pandas numpy matplotlib scikit-learn statsmodels h5py tqdm pillow seaborn jupyter
 ```
 
@@ -133,3 +116,4 @@ Step 3: Interpretability Analysis
 | `conceptclip_features_30.h5` | 30-concept feature database |
 | `image_features/df_image_features.csv` | Image embedding features |
 | `image_features/df_nodule_features_concept20_minmax.csv` | Nodule-level concept scores |
+
