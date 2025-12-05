@@ -1,29 +1,29 @@
 # LIDC-IDRI Patch Research
 
-An Interpretable Concept-based Approach for Pulmonary Nodule Malignancy Prediction using ConceptCLIP
+Interpretable Lung Nodule Malignancy Prediction Based on ConceptCLIP
 
-## Introduction
+## Project Overview
 
-This project explores the use of **ConceptCLIP** (a vision-language model tailored for the biomedical domain) for pulmonary nodule benign/malignant classification. The core approach includes:
+This project explores the use of **ConceptCLIP** (a vision-language model for the biomedical domain) for lung nodule benign/malignant classification. The core approach is:
 
-1. **Zero-shot Feature Extraction**: Using a pre-trained ConceptCLIP model without fine-tuning
+1. **Zero-shot Feature Extraction**: Using pre-trained ConceptCLIP model without fine-tuning
 2. **Concept-driven**: Defining radiological concepts (e.g., spiculation, lobulation, calcification) and computing image-concept similarity scores
-3. **Interpretability**: Using simple logistic regression models to quantify each concept's contribution through feature coefficients
+3. **Interpretability**: Using simple logistic regression models to quantify each concept's contribution to predictions through feature coefficients
 
 ### Research Questions
 
 - **RQ1**: How to design effective radiological concepts to improve downstream classification performance?
-- **RQ2**: Are the concept representations learned by ConceptCLIP clinically interpretable?
+- **RQ2**: Do the concept representations learned by ConceptCLIP have clinical interpretability?
 
 ### Main Results
 
 - 20-concept configuration achieves optimal performance: **AUC=0.794, Accuracy=0.730**
-- **12 statistically significant concept features** identified through L1-regularized feature selection
-- All significant features align with established clinical knowledge
+- **12 statistically significant concept features** identified through L1 regularization feature selection
+- All significant features are consistent with clinical knowledge
 
 ## Dataset
 
-Nodule-level 2D patch dataset constructed from **LIDC-IDRI**:
+Using the **LIDC-IDRI** dataset to construct nodule-level 2D patch dataset:
 
 - **Number of Nodules**: 678 (Malignant: 397, Benign: 281)
 - **Number of Patients**: 440
@@ -36,13 +36,13 @@ Dataset construction code: [LIDC-IDRI_patch_generation](https://github.com/aquam
 ```
 LIDC-IDRI_patch_research/
 ├── 1_Database_and_Dataloader_create.ipynb  # Data preprocessing and feature extraction
-├── 2_Read_database.ipynb                    # Database reading and basic classification
+├── 2_Read_database.ipynb                    # Read database and basic classification
 ├── 3_For_20_concept.ipynb                   # 20-concept experiment
 ├── 4_For_30_concept.ipynb                   # 30-concept experiment
 ├── 5_For_image_embeddings.ipynb             # Image embedding baseline experiment
 ├── 6_For_20_concept_L1_feature_selection.ipynb  # L1 feature selection and interpretability analysis
 └── datasets/                                # Dataset folder
-    └── curation2/lidc_patches_all/          # Patch image data (please extract the compressed file)
+    └── curation2/lidc_patches_all/          # Patch image data (please extract the compressed file yourself)
 ```
 
 ## Installation
@@ -81,7 +81,7 @@ Ensure the `datasets/curation2/lidc_patches_all/` directory contains:
 - `all_patches_metadata.csv`: Metadata file
 - Patient folders (e.g., `LIDC-IDRI-0001/`): Containing patch images
 
-**Note**: First-time users need to log in to HuggingFace:
+**Note**: First-time run requires HuggingFace login:
 ```python
 from huggingface_hub import login
 login(token="YOUR_HUGGINGFACE_TOKEN")
@@ -91,12 +91,12 @@ login(token="YOUR_HUGGINGFACE_TOKEN")
 
 | Notebook | Description |
 |----------|-------------|
-| `1_Database_and_Dataloader_create.ipynb` | **Data Preprocessing & Feature Extraction Pipeline**: Filter nodules with area ≥50mm², generate binary labels, load ConceptCLIP to extract image/text features, store in HDF5 database |
-| `2_Read_database.ipynb` | **Basic Classification Experiment (10 concepts)**: Read HDF5 features, Prompt Ensembling, compute concept scores, nodule-level aggregation, 5-fold cross-validation logistic regression |
-| `3_For_20_concept.ipynb` | **20-Concept Experiment**: Define 20 radiological concept categories (98 sub-concepts), generate text embeddings, image-concept similarity computation, classification evaluation |
-| `4_For_30_concept.ipynb` | **30-Concept Experiment**: Expand to 30 concept categories (145 sub-concepts), compare classification performance across different concept counts |
-| `5_For_image_embeddings.ipynb` | **Baseline Experiment**: Classification using pure image embeddings (Mean-Max concatenation, 2304 dimensions), comparing Logistic Regression, SVM, and XGBoost |
-| `6_For_20_concept_L1_feature_selection.ipynb` | **Feature Selection & Interpretability Analysis**: LASSO feature selection, statistical significance testing (p-value), Bootstrap stability evaluation, Case Study visualization |
+| `1_Database_and_Dataloader_create.ipynb` | **Data preprocessing and feature extraction pipeline**: Filter nodules with area ≥50mm², binary label generation, load ConceptCLIP to extract image/text features, store to HDF5 database |
+| `2_Read_database.ipynb` | **Basic classification experiment (10 concepts)**: Read HDF5 features, Prompt Ensembling, compute concept scores, nodule-level aggregation, 5-fold cross-validation logistic regression |
+| `3_For_20_concept.ipynb` | **20-concept experiment**: Define 20 radiological concept categories (98 sub-concepts), generate text embeddings, image-concept similarity computation, classification evaluation |
+| `4_For_30_concept.ipynb` | **30-concept experiment**: Extend to 30 concept categories (145 sub-concepts), compare classification performance across different concept numbers |
+| `5_For_image_embeddings.ipynb` | **Baseline experiment**: Classification using pure image embeddings (Mean-Max concatenation, 2304 dimensions), compare Logistic Regression, SVM, XGBoost |
+| `6_For_20_concept_L1_feature_selection.ipynb` | **Feature selection and interpretability analysis**: LASSO feature selection, statistical significance testing (p-value), Bootstrap stability assessment, Case Study visualization |
 
 ### 3. Recommended Workflow
 
@@ -121,33 +121,13 @@ Step 3: Interpretability Analysis
 └── 5_For_image_embeddings.ipynb
 ```
 
-### 4. Output Files
+### 4. Output Files Description
 
 | File | Description |
 |------|-------------|
-| `curated_metadata.csv` | Filtered metadata |
+| `curated_metadata.csv` | Curated metadata |
 | `conceptclip_features.h5` | Original 10-concept feature database |
 | `conceptclip_features_20.h5` | 20-concept feature database |
 | `conceptclip_features_30.h5` | 30-concept feature database |
 | `image_features/df_image_features.csv` | Image embedding features |
 | `image_features/df_nodule_features_concept20_minmax.csv` | Nodule-level concept scores |
-
-## Concept Design
-
-This project defines 20 radiological concept categories (examples):
-
-| Concept Category | Clinical Significance |
-|------------------|----------------------|
-| `spiculation` | Spiculated margins - Malignancy indicator |
-| `lobulation` | Lobulation - Malignancy indicator |
-| `round_shape` | Round shape - Benign tendency |
-| `solid` | Solid nodule |
-| `part_solid` | Part-solid - High malignancy risk |
-| `benign_calc` | Benign calcification |
-| `cavity` | Cavitation |
-
-Each concept contains multiple synonym variants, combined with 10 prompt templates to generate text descriptions.
-
-## License
-
-MIT License
