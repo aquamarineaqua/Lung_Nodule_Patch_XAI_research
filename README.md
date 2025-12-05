@@ -2,6 +2,8 @@
 
 Interpretable Lung Nodule Malignancy Prediction Based on ConceptCLIP
 
+![XAI_CASE](img/Case_study_1.png)
+
 ## Project Overview
 
 This project explores the use of **ConceptCLIP** (a vision-language model for the biomedical domain) for lung nodule benign/malignant classification. The core approach is:
